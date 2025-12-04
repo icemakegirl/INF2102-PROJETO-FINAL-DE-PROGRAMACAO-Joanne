@@ -1,26 +1,38 @@
-# INF2102-PROJETO-FINAL-DE-PROGRAMACAO-Joanne
 # 🧠 LLM-DEIA Classifier --- Classificação de Postagens sobre Diversidade, Equidade, Inclusão e Acessibilidade
 
 Este repositório contém um protótipo de classificador baseado em **Large
 Language Models (LLMs)** capaz de analisar postagens de redes sociais e
 determinar:
 
-## 🔹 1. Subtema DEIA abordado
+## 🔹 1. DEIA Subtopic Classification
 
--   Raça\
--   Gênero\
--   Inclusão\
--   LGBTQIA+
+-   **race** (Raça)
+-   **gender** (Gênero)
+-   **inclusion** (Inclusão)
+-   **LGBTQIA+**
+-   **none** (Nenhum)
 
-## 🔹 2. Posição do Post
+## 🔹 2. Post Stance Classification
 
--   **Pro-DEIA**\
--   **Anti-DEIA**\
--   **Neutro**
+-   **pro-DEIA** (Pró-DEIA)
+-   **anti-DEIA** (Anti-DEIA)
+-   **neutral** (Neutro)
 
 O objetivo do projeto é avaliar se modelos de linguagem generalistas
 conseguem reconhecer corretamente temas sensíveis e suas nuances em
 discursos sociais.
+
+------------------------------------------------------------------------
+
+## 📊 Dataset
+
+O dataset utilizado foi coletado a partir de postagens do Reddit usando a seguinte query string:
+
+```
+"diversity" OR "lgbt" OR "inclusion" OR "DEI" OR "DEIA" OR "sexist" OR "sexism" OR "POC" OR "person of color"
+```
+
+O dataset está sendo rotulado manualmente para validar a classificação automática realizada pelos LLMs.
 
 ------------------------------------------------------------------------
 
@@ -57,15 +69,49 @@ login("SEU_TOKEN")
 model_id = "meta-llama/Llama-3-8b"
 ```
 
-### 4. Estrutura do Prompt
+### 4. Prompt Structure
 
-    Texto: "Precisamos de mais políticas de inclusão para PCDs."
-    Subtema: inclusão
-    Posição: pro
+**Subtopic Classification:**
+```
+You are an expert in classifying text about Diversity, Equity, Inclusion, and Accessibility (DEIA).
 
-    Texto: {seu_texto}
-    Subtema:
-    Posição:
+Examples:
+
+Input: "We need more women in leadership positions."
+Output: gender
+
+Input: "This policy supports minorities in the hiring process."
+Output: race
+
+Input: "All employees must wear their ID badges."
+Output: none
+
+Classify the following sentence using only the subtopics: gender, race, LGBTQIA+, inclusion or none:
+
+Input: "{post}"
+Output:
+```
+
+**Stance Classification:**
+```
+You are a language model trained to classify comments based on their stance toward DEIA (Diversity, Equity, Inclusion, and Accessibility).
+
+Examples:
+
+Input: "We need more women and people of color in leadership roles."
+Output: pro-DEIA
+
+Input: "Hiring should be based on merit, not race or gender."
+Output: anti-DEIA
+
+Input: "Our company is hosting a webinar on leadership strategies."
+Output: neutral
+
+Rate the following comment using only the following rating options: pro-DEIA, anti-DEIA or neutral.
+
+Input: "{post}"
+Output:
+```
 
 ------------------------------------------------------------------------
 
