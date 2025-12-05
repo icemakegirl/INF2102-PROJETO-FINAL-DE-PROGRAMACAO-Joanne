@@ -53,7 +53,7 @@ O dataset está sendo rotulado manualmente para validar a classificação autom�
 ### 1. Instalação
 
 ``` python
-!pip install -U "huggingface-hub<1.0,>=0.34.0"
+!pip install -U "transformers>=4.44.0" "huggingface_hub>=0.25.2"
 ```
 
 ### 2. Autenticação
@@ -73,20 +73,31 @@ model_id = "meta-llama/Llama-3-8b"
 
 **Subtopic Classification:**
 ```
-You are an expert in classifying text about Diversity, Equity, Inclusion, and Accessibility (DEIA).
+You are an expert in classifying texts on diversity, equity, and inclusion using the following labels:
+
+- gender: Statements related to women, men, non-binary people, gender equality, gender roles, or gender representation.
+- race: Statements about ethnicity, racial minorities, discrimination based on race, or racial representation.
+- LGBTQ+: Statements referring to sexual orientation, gender identity, same-sex relationships, or LGBTQ+ rights.
+- inclusion: Statements about accessibility, disability inclusion, belonging, general DEIA practices, or inclusion that does not fit gender/race/LGBTQ+ specifically.
+- none: Statements unrelated to DEIA or lacking any clear DEIA context.
 
 Examples:
-
 Input: "We need more women in leadership positions."
 Output: gender
 
 Input: "This policy supports minorities in the hiring process."
 Output: race
 
+Input: "The company is offering benefits for same-sex partners."
+Output: LGBTQ+
+
+Input: "We want a more inclusive workplace for everyone."
+Output: inclusion
+
 Input: "All employees must wear their ID badges."
 Output: none
 
-Classify the following sentence using only the subtopics: gender, race, LGBTQIA+, inclusion or none:
+Classify the input using ONLY one of the following options: gender, race, LGBTQ+, inclusion, none.
 
 Input: "{post}"
 Output:
@@ -94,8 +105,11 @@ Output:
 
 **Stance Classification:**
 ```
-You are a language model trained to classify comments based on their stance toward DEIA (Diversity, Equity, Inclusion, and Accessibility).
+You are an expert in classifying texts on diversity, equity, and inclusion using the following labels:
 
+- pro-DEIA: Supports, encourages, or speaks favorably about DEIA principles or actions.
+- anti-DEIA: Opposes, criticizes, mocks, minimizes, or rejects DEIA principles.
+- neutral: Unrelated, ambiguous, factual, or lacking any clear stance toward DEIA.
 Examples:
 
 Input: "We need more women and people of color in leadership roles."
@@ -107,7 +121,23 @@ Output: anti-DEIA
 Input: "Our company is hosting a webinar on leadership strategies."
 Output: neutral
 
-Rate the following comment using only the following rating options: pro-DEIA, anti-DEIA or neutral.
+Input: "Quotas are a form of reverse discrimination."
+Output: anti-DEIA
+
+Input: "I don't see color, I treat everyone the same."
+Output: anti-DEIA
+
+Input: "Accessibility tools like screen readers help all users, not just those with disabilities."
+Output: pro-DEIA
+
+Input: "We should have more inclusive hiring practices."
+Output: pro-DEIA
+
+
+Input: "Hiring should be based on merit, not quotas."
+Output: anti-DEIA
+
+Classify the input using ONLY one of the following labels: pro-DEIA, anti-DEIA, neutral.
 
 Input: "{post}"
 Output:
